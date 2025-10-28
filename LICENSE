@@ -1,0 +1,50 @@
+MIT License
+
+Copyright (c) 2024 Metadata Cleaner Contributors
+
+Permission is hereby granted, free of charge, to any person obtaining a copy
+of this software and associated documentation files (the "Software"), to deal
+in the Software without restriction, including without limitation the rights
+to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+copies of the Software, and to permit persons to whom the Software is
+furnished to do so, subject to the following conditions:
+
+The above copyright notice and this permission notice shall be included in all
+copies or substantial portions of the Software.
+
+THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
+SOFTWARE.
+
+---
+
+THIRD-PARTY LICENSES
+
+This software uses the following third-party libraries:
+
+- pikepdf: Mozilla Public License 2.0
+- Pillow: HPND License
+- mutagen: GNU GPL v2
+- python-docx: MIT License
+- openpyxl: MIT License
+- python-pptx: MIT License
+- Flask: BSD-3-Clause License
+- ExifTool: Perl Artistic License / GPL
+- FFmpeg: LGPL / GPL (depending on build)
+
+Please refer to each library's license for specific terms and conditions.
+
+---
+
+DISCLAIMER
+
+This software is provided for legitimate privacy protection purposes. Users are
+responsible for ensuring their use complies with applicable laws and regulations.
+The authors and contributors are not responsible for any misuse of this software.
+
+Metadata removal does not guarantee complete privacy or security. Users should
+verify that cleaned files meet their specific privacy requirements.

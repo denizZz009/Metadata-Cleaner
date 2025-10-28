@@ -1,0 +1,469 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Metadata Cleaner - Privacy Protection</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            padding: 20px;
+        }
+        
+        .container {
+            background: white;
+            border-radius: 20px;
+            box-shadow: 0 20px 60px rgba(0,0,0,0.3);
+            max-width: 800px;
+            width: 100%;
+            padding: 40px;
+        }
+        
+        h1 {
+            color: #667eea;
+            text-align: center;
+            margin-bottom: 10px;
+            font-size: 2.5em;
+        }
+        
+        .subtitle {
+            text-align: center;
+            color: #666;
+            margin-bottom: 30px;
+        }
+        
+        .upload-area {
+            border: 3px dashed #667eea;
+            border-radius: 15px;
+            padding: 60px 20px;
+            text-align: center;
+            cursor: pointer;
+            transition: all 0.3s;
+            margin-bottom: 30px;
+        }
+        
+        .upload-area:hover {
+            background: #f8f9ff;
+            border-color: #764ba2;
+        }
+        
+        .upload-area.dragover {
+            background: #f0f4ff;
+            border-color: #764ba2;
+        }
+        
+        .upload-icon {
+            font-size: 4em;
+            margin-bottom: 20px;
+        }
+        
+        .upload-text {
+            font-size: 1.2em;
+            color: #333;
+            margin-bottom: 10px;
+        }
+        
+        .upload-hint {
+            color: #999;
+            font-size: 0.9em;
+        }
+        
+        input[type="file"] {
+            display: none;
+        }
+        
+        .level-selector {
+            margin-bottom: 30px;
+        }
+        
+        .level-selector label {
+            display: block;
+            margin-bottom: 10px;
+            font-weight: bold;
+            color: #333;
+        }
+        
+        .level-options {
+            display: flex;
+            gap: 15px;
+            justify-content: center;
+        }
+        
+        .level-option {
+            flex: 1;
+            padding: 15px;
+            border: 2px solid #ddd;
+            border-radius: 10px;
+            cursor: pointer;
+            transition: all 0.3s;
+            text-align: center;
+        }
+        
+        .level-option:hover {
+            border-color: #667eea;
+        }
+        
+        .level-option.selected {
+            border-color: #667eea;
+            background: #f8f9ff;
+        }
+        
+        .level-option input[type="radio"] {
+            display: none;
+        }
+        
+        .level-title {
+            font-weight: bold;
+            margin-bottom: 5px;
+            color: #667eea;
+        }
+        
+        .level-desc {
+            font-size: 0.85em;
+            color: #666;
+        }
+        
+        .btn {
+            width: 100%;
+            padding: 15px;
+            border: none;
+            border-radius: 10px;
+            font-size: 1.1em;
+            font-weight: bold;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+        
+        .btn-primary {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+        }
+        
+        .btn-primary:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 10px 20px rgba(102, 126, 234, 0.3);
+        }
+        
+        .btn-primary:disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
+            transform: none;
+        }
+        
+        .results {
+            margin-top: 30px;
+            display: none;
+        }
+        
+        .result-card {
+            background: #f8f9ff;
+            border-radius: 10px;
+            padding: 20px;
+            margin-bottom: 15px;
+        }
+        
+        .result-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 15px;
+        }
+        
+        .result-filename {
+            font-weight: bold;
+            color: #333;
+        }
+        
+        .result-status {
+            padding: 5px 15px;
+            border-radius: 20px;
+            font-size: 0.85em;
+            font-weight: bold;
+        }
+        
+        .status-success {
+            background: #4caf50;
+            color: white;
+        }
+        
+        .status-error {
+            background: #f44336;
+            color: white;
+        }
+        
+        .result-stats {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 10px;
+            margin-bottom: 15px;
+        }
+        
+        .stat {
+            padding: 10px;
+            background: white;
+            border-radius: 5px;
+        }
+        
+        .stat-label {
+            font-size: 0.85em;
+            color: #666;
+            margin-bottom: 5px;
+        }
+        
+        .stat-value {
+            font-size: 1.2em;
+            font-weight: bold;
+            color: #667eea;
+        }
+        
+        .btn-download {
+            background: #4caf50;
+            color: white;
+            padding: 10px 20px;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            font-weight: bold;
+        }
+        
+        .btn-download:hover {
+            background: #45a049;
+        }
+        
+        .loading {
+            text-align: center;
+            padding: 20px;
+            display: none;
+        }
+        
+        .spinner {
+            border: 4px solid #f3f3f3;
+            border-top: 4px solid #667eea;
+            border-radius: 50%;
+            width: 40px;
+            height: 40px;
+            animation: spin 1s linear infinite;
+            margin: 0 auto 15px;
+        }
+        
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+        
+        .error-message {
+            background: #ffebee;
+            color: #c62828;
+            padding: 15px;
+            border-radius: 10px;
+            margin-top: 15px;
+            display: none;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>🔒 Metadata Cleaner</h1>
+        <p class="subtitle">Remove ALL metadata from your files while preserving content</p>
+        
+        <div class="upload-area" id="uploadArea">
+            <div class="upload-icon">📁</div>
+            <div class="upload-text">Drag & drop files here or click to browse</div>
+            <div class="upload-hint">Supports: PDF, Office, Images, Audio, Video</div>
+            <input type="file" id="fileInput" multiple>
+        </div>
+        
+        <div class="level-selector">
+            <label>Cleaning Level:</label>
+            <div class="level-options">
+                <label class="level-option" for="level-basic">
+                    <input type="radio" name="level" value="basic" id="level-basic">
+                    <div class="level-title">Basic</div>
+                    <div class="level-desc">Remove common metadata</div>
+                </label>
+                <label class="level-option selected" for="level-deep">
+                    <input type="radio" name="level" value="deep" id="level-deep" checked>
+                    <div class="level-title">Deep</div>
+                    <div class="level-desc">Remove all metadata</div>
+                </label>
+                <label class="level-option" for="level-paranoid">
+                    <input type="radio" name="level" value="paranoid" id="level-paranoid">
+                    <div class="level-title">Paranoid</div>
+                    <div class="level-desc">Maximum cleaning</div>
+                </label>
+            </div>
+        </div>
+        
+        <button class="btn btn-primary" id="cleanBtn" disabled>Clean Files</button>
+        
+        <div class="loading" id="loading">
+            <div class="spinner"></div>
+            <div>Cleaning files...</div>
+        </div>
+        
+        <div class="error-message" id="errorMessage"></div>
+        
+        <div class="results" id="results"></div>
+    </div>
+    
+    <script>
+        const uploadArea = document.getElementById('uploadArea');
+        const fileInput = document.getElementById('fileInput');
+        const cleanBtn = document.getElementById('cleanBtn');
+        const loading = document.getElementById('loading');
+        const results = document.getElementById('results');
+        const errorMessage = document.getElementById('errorMessage');
+        let selectedFiles = [];
+        
+        // Upload area click
+        uploadArea.addEventListener('click', () => fileInput.click());
+        
+        // File selection
+        fileInput.addEventListener('change', (e) => {
+            selectedFiles = Array.from(e.target.files);
+            updateUI();
+        });
+        
+        // Drag and drop
+        uploadArea.addEventListener('dragover', (e) => {
+            e.preventDefault();
+            uploadArea.classList.add('dragover');
+        });
+        
+        uploadArea.addEventListener('dragleave', () => {
+            uploadArea.classList.remove('dragover');
+        });
+        
+        uploadArea.addEventListener('drop', (e) => {
+            e.preventDefault();
+            uploadArea.classList.remove('dragover');
+            selectedFiles = Array.from(e.dataTransfer.files);
+            updateUI();
+        });
+        
+        // Level selection
+        document.querySelectorAll('.level-option').forEach(option => {
+            option.addEventListener('click', function() {
+                document.querySelectorAll('.level-option').forEach(o => o.classList.remove('selected'));
+                this.classList.add('selected');
+                this.querySelector('input').checked = true;
+            });
+        });
+        
+        // Clean button
+        cleanBtn.addEventListener('click', cleanFiles);
+        
+        function updateUI() {
+            if (selectedFiles.length > 0) {
+                cleanBtn.disabled = false;
+                uploadArea.querySelector('.upload-text').textContent = 
+                    `${selectedFiles.length} file(s) selected`;
+            } else {
+                cleanBtn.disabled = true;
+                uploadArea.querySelector('.upload-text').textContent = 
+                    'Drag & drop files here or click to browse';
+            }
+        }
+        
+        async function cleanFiles() {
+            if (selectedFiles.length === 0) return;
+            
+            const level = document.querySelector('input[name="level"]:checked').value;
+            const formData = new FormData();
+            
+            selectedFiles.forEach(file => formData.append('files', file));
+            formData.append('level', level);
+            
+            cleanBtn.disabled = true;
+            loading.style.display = 'block';
+            results.style.display = 'none';
+            errorMessage.style.display = 'none';
+            
+            try {
+                const response = await fetch('/api/batch-clean', {
+                    method: 'POST',
+                    body: formData
+                });
+                
+                const data = await response.json();
+                
+                if (response.ok) {
+                    displayResults(data.results);
+                } else {
+                    showError(data.error || 'Failed to clean files');
+                }
+            } catch (error) {
+                showError('Network error: ' + error.message);
+            } finally {
+                loading.style.display = 'none';
+                cleanBtn.disabled = false;
+            }
+        }
+        
+        function displayResults(resultsData) {
+            results.innerHTML = '';
+            results.style.display = 'block';
+            
+            resultsData.forEach(result => {
+                const card = document.createElement('div');
+                card.className = 'result-card';
+                
+                const statusClass = result.success ? 'status-success' : 'status-error';
+                const statusText = result.success ? 'Success' : 'Failed';
+                
+                let content = `
+                    <div class="result-header">
+                        <div class="result-filename">${result.filename}</div>
+                        <div class="result-status ${statusClass}">${statusText}</div>
+                    </div>
+                `;
+                
+                if (result.success) {
+                    content += `
+                        <div class="result-stats">
+                            <div class="stat">
+                                <div class="stat-label">Size Reduction</div>
+                                <div class="stat-value">${result.size_reduction_percent.toFixed(1)}%</div>
+                            </div>
+                            <div class="stat">
+                                <div class="stat-label">Metadata Removed</div>
+                                <div class="stat-value">${result.metadata_count}</div>
+                            </div>
+                        </div>
+                        <button class="btn-download" onclick="downloadFile('${result.cleaned_filename}')">
+                            Download Cleaned File
+                        </button>
+                    `;
+                } else {
+                    content += `<div style="color: #c62828; margin-top: 10px;">
+                        ${result.errors.join('<br>')}
+                    </div>`;
+                }
+                
+                card.innerHTML = content;
+                results.appendChild(card);
+            });
+        }
+        
+        function downloadFile(filename) {
+            window.location.href = `/api/download/${filename}`;
+        }
+        
+        function showError(message) {
+            errorMessage.textContent = message;
+            errorMessage.style.display = 'block';
+        }
+    </script>
+</body>
+</html>
